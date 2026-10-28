@@ -1,0 +1,13 @@
+services:
+  shopsense:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - DATABASE_URL=file:./prisma/dev.db
+      - JWT_SECRET=shopsense-super-secret-jwt-key-2026
+      - PORT=3001
+      - NODE_ENV=production
+    restart: unless-stopped
