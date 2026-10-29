@@ -73,6 +73,10 @@ export async function GET(req: NextRequest) {
             take: 1,
             select: { quantity: true, reorderPoint: true },
           },
+          variants: {
+            take: 1,
+            select: { compareAtPrice: true },
+          },
         },
       }),
       prisma.product.count({ where }),
@@ -84,6 +88,7 @@ export async function GET(req: NextRequest) {
       slug: p.slug,
       brand: p.brand,
       basePrice: p.basePrice,
+      originalPrice: p.variants[0]?.compareAtPrice || undefined,
       rating: p.rating,
       reviewCount: p.reviewCount,
       category: p.category,

@@ -45,6 +45,7 @@ async function runConcurrencyTests() {
     let successfulPurchases = 0;
     let failedPurchases = 0;
 
+    const runId = Date.now();
     const purchaseAttempts = Array.from({ length: 5 }).map(async (_, idx) => {
       try {
         await prisma.$transaction(async (tx) => {
@@ -72,7 +73,7 @@ async function runConcurrencyTests() {
               previousQuantity: inv.quantity,
               newQuantity: newQty,
               reason: "SALE",
-              referenceId: `TEST-CONCURRENCY-${idx}`,
+              referenceId: `TEST-CONCURRENCY-${runId}-${idx}`,
             },
           });
         });
@@ -98,7 +99,7 @@ async function runConcurrencyTests() {
       where: {
         inventoryId: inventory.id,
         reason: "SALE",
-        referenceId: { startsWith: "TEST-CONCURRENCY" },
+        referenceId: { startsWith: `TEST-CONCURRENCY-${runId}` },
       },
     });
     assert(movements.length === 2, `Auditable ledger recorded exactly 2 movement logs`);

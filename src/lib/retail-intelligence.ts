@@ -28,6 +28,8 @@ export interface RetailerKPIs {
   grossMarginPercentage: number;
   lowStockCount: number;
   outOfStockCount: number;
+  revenueChangePercentage: number;
+  unitsChangePercentage: number;
 }
 
 // 1. Compute Inventory Intelligence for a Retailer
@@ -97,26 +99,34 @@ export async function computeInventoryIntelligence(retailerId: string): Promise<
 
 // 2. Compute Executive Retailer KPIs
 export async function computeRetailerKPIs(retailerId: string, daysWindow: number = 30): Promise<RetailerKPIs> {
-  const cutoff = new Date(Date.now() - daysWindow * 24 * 60 * 60 * 1000);
+  const now = Date.now();
+  const cutoff = new Date(now - daysWindow * 24 * 60 * 60 * 1000);
+  const prevCutoff = new Date(now - daysWindow * 2 * 24 * 60 * 60 * 1000);
 
-  const salesEvents = await prisma.salesEvent.findMany({
-    where: {
-      retailerId,
-      eventDate: { gte: cutoff },
-    },
-  });
-
-  const ordersCount = await prisma.order.count({
-    where: {
-      retailerId,
-      createdAt: { gte: cutoff },
-    },
-  });
-
-  const inventory = await prisma.inventory.findMany({
-    where: { retailerId },
-    select: { quantity: true, reorderPoint: true },
-  });
+  const [salesEvents, prevSalesEvents, ordersCount, inventory] = await Promise.all([
+    prisma.salesEvent.findMany({
+      where: {
+        retailerId,
+        eventDate: { gte: cutoff },
+      },
+    }),
+    prisma.salesEvent.findMany({
+      where: {
+        retailerId,
+        eventDate: { gte: prevCutoff, lt: cutoff },
+      },
+    }),
+    prisma.order.count({
+      where: {
+        retailerId,
+        createdAt: { gte: cutoff },
+      },
+    }),
+    prisma.inventory.findMany({
+      where: { retailerId },
+      select: { quantity: true, reorderPoint: true },
+    }),
+  ]);
 
   const grossSales = salesEvents.reduce((sum, se) => sum + se.revenue, 0);
   const totalCost = salesEvents.reduce((sum, se) => sum + se.cost, 0);
@@ -125,6 +135,16 @@ export async function computeRetailerKPIs(retailerId: string, daysWindow: number
   const grossProfit = grossSales - totalCost;
   const grossMarginPercentage = grossSales > 0 ? parseFloat(((grossProfit / grossSales) * 100).toFixed(1)) : 0;
   const averageOrderValue = ordersCount > 0 ? Math.round(grossSales / ordersCount) : Math.round(grossSales / Math.max(1, totalUnitsSold / 2));
+
+  const prevGrossSales = prevSalesEvents.reduce((sum, se) => sum + se.revenue, 0);
+  const prevUnitsSold = prevSalesEvents.reduce((sum, se) => sum + se.units, 0);
+
+  const revenueChangePercentage = prevGrossSales > 0
+    ? parseFloat((((grossSales - prevGrossSales) / prevGrossSales) * 100).toFixed(1))
+    : 0;
+  const unitsChangePercentage = prevUnitsSold > 0
+    ? parseFloat((((totalUnitsSold - prevUnitsSold) / prevUnitsSold) * 100).toFixed(1))
+    : 0;
 
   const lowStockCount = inventory.filter((i) => i.quantity <= i.reorderPoint && i.quantity > 0).length;
   const outOfStockCount = inventory.filter((i) => i.quantity === 0).length;
@@ -139,6 +159,8 @@ export async function computeRetailerKPIs(retailerId: string, daysWindow: number
     grossMarginPercentage,
     lowStockCount,
     outOfStockCount,
+    revenueChangePercentage,
+    unitsChangePercentage,
   };
 }
 

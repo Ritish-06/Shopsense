@@ -46,9 +46,13 @@ export function Navbar() {
 
   useEffect(() => {
     refreshCart();
-    // Poll cart changes or listen to storage/focus events
+    // Poll cart changes or listen to storage/focus/custom events
     window.addEventListener("focus", refreshCart);
-    return () => window.removeEventListener("focus", refreshCart);
+    window.addEventListener("shopsense:cart-updated", refreshCart);
+    return () => {
+      window.removeEventListener("focus", refreshCart);
+      window.removeEventListener("shopsense:cart-updated", refreshCart);
+    };
   }, []);
 
   const handleSearchSubmit = (e: React.FormEvent) => {

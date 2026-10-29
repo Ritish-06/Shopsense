@@ -73,15 +73,15 @@ export default function RetailerOverviewPage() {
         <MetricCard
           title="30-Day Gross Revenue"
           value={formatCurrency(kpis.grossSales || 0)}
-          change={12.4}
+          change={kpis.revenueChangePercentage}
           changeLabel="vs previous 30 days"
           icon={DollarSign}
         />
         <MetricCard
           title="Total Units Sold"
           value={kpis.totalUnitsSold || 0}
-          change={8.1}
-          changeLabel="across 105 active SKUs"
+          change={kpis.unitsChangePercentage}
+          changeLabel="vs previous 30 days"
           icon={Package}
         />
         <MetricCard
