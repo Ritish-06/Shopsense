@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { motion, useReducedMotion } from "framer-motion";
 import {
   Sparkles,
   ArrowRight,
@@ -48,7 +47,6 @@ const SUGGESTED_INQUIRIES = [
 
 export default function HomePage() {
   const router = useRouter();
-  const shouldReduceMotion = useReducedMotion();
   const [aiPrompt, setAiPrompt] = useState("");
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [featuredProducts, setFeaturedProducts] = useState<ProductCardData[]>([]);
@@ -98,57 +96,35 @@ export default function HomePage() {
             {/* Left Content (7 cols) */}
             <div className="lg:col-span-7 text-left space-y-6">
               {/* Badge */}
-              <motion.div
-                initial={shouldReduceMotion ? {} : { opacity: 0, y: -8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4 }}
-                className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50/90 px-3.5 py-1.5 text-xs font-semibold text-blue-700 shadow-subtle backdrop-blur-sm"
-              >
+              <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50/90 px-3.5 py-1.5 text-xs font-semibold text-blue-700 shadow-subtle backdrop-blur-sm animate-in fade-in duration-300">
                 <Sparkles className="h-3.5 w-3.5 text-blue-600" />
                 <span>Zero-Hallucination AI E-Commerce & Retail Intelligence</span>
-              </motion.div>
+              </div>
 
               {/* Headline with word-by-word reveal */}
               <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-zinc-900 leading-[1.12]">
                 {heroWords.map((word, i) => (
-                  <motion.span
+                  <span
                     key={i}
-                    initial={shouldReduceMotion ? {} : { opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{
-                      duration: 0.45,
-                      delay: shouldReduceMotion ? 0 : 0.08 * i,
-                      ease: [0.22, 1, 0.36, 1],
-                    }}
-                    className={`inline-block mr-2.5 ${
+                    className={`inline-block mr-2.5 transition-all duration-300 ${
                       word === "Intelligence."
                         ? "text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-teal-600 to-emerald-600"
                         : ""
                     }`}
                   >
                     {word}
-                  </motion.span>
+                  </span>
                 ))}
               </h1>
 
               {/* Supporting Copy */}
-              <motion.p
-                initial={shouldReduceMotion ? {} : { opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: shouldReduceMotion ? 0 : 0.35 }}
-                className="text-base sm:text-lg text-zinc-600 max-w-xl leading-relaxed font-normal"
-              >
+              <p className="text-base sm:text-lg text-zinc-600 max-w-xl leading-relaxed font-normal">
                 Discover products you’ll love, compare prices intelligently, and make confident buying
                 decisions with AI-powered shopping intelligence.
-              </motion.p>
+              </p>
 
               {/* Action Buttons */}
-              <motion.div
-                initial={shouldReduceMotion ? {} : { opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.45, delay: shouldReduceMotion ? 0 : 0.45 }}
-                className="flex flex-wrap items-center gap-3.5 pt-2"
-              >
+              <div className="flex flex-wrap items-center gap-3.5 pt-2">
                 <Link href="/products">
                   <Button size="lg" className="rounded-xl px-7 text-sm font-semibold shadow-md group">
                     <span>Explore Products</span>
@@ -166,7 +142,7 @@ export default function HomePage() {
                     <span>Try AI Shopping Assistant</span>
                   </Button>
                 </Link>
-              </motion.div>
+              </div>
 
               {/* Trust Indicators */}
               <div className="pt-4 flex flex-wrap items-center gap-6 text-xs text-zinc-500 font-medium">
@@ -186,12 +162,7 @@ export default function HomePage() {
             </div>
 
             {/* Right Interactive Centerpiece (5 cols) */}
-            <motion.div
-              initial={shouldReduceMotion ? {} : { opacity: 0, scale: 0.96 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, delay: shouldReduceMotion ? 0 : 0.3 }}
-              className="lg:col-span-5 relative"
-            >
+            <div className="lg:col-span-5 relative transition-all duration-500">
               <div className="relative rounded-3xl border border-zinc-200/90 bg-white/90 p-5 shadow-elevated backdrop-blur-xl">
                 {/* Visual Glassmorphic Showcase */}
                 <div className="flex items-center justify-between pb-3.5 border-b border-zinc-100">
@@ -269,7 +240,8 @@ export default function HomePage() {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
+
           </div>
         </div>
       </section>
