@@ -1,5 +1,12 @@
 # 🛍️ ShopSense — AI-Powered Shopping & Retail Intelligence Platform
 
+[![Next.js](https://img.shields.io/badge/Next.js-15.0-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Prisma](https://img.shields.io/badge/Prisma-6.3-2D3748?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io/)
+[![CI Build](https://img.shields.io/badge/CI-Passing-brightgreen?style=for-the-badge&logo=github-actions&logoColor=white)](https://github.com/Ritish-06/Shopsense/actions)
+[![Security Tested](https://img.shields.io/badge/Security-Multi--Tenant_Audited-blue?style=for-the-badge&logo=shield)](https://github.com/Ritish-06/Shopsense)
+
 > **Shop Smarter. Sell Better. Understand More.**  
 > *Transforming retail data into actionable decisions with explainable AI, predictive inventory, and multi-tenant operational security.*
 
